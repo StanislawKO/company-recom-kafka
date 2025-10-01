@@ -1,0 +1,84 @@
+server:
+  port: 8099
+
+spring:
+  datasource:
+    driver-class-name: ${DATASOURCE_DRIVER:org.postgresql.Driver}
+    url: jdbc:postgresql://${DATASOURCE_HOST:localhost}:5437/recommendation
+    username: ${POSTGRES_USER_FILE:user}
+    password: ${POSTGRES_PASSWORD_FILE:pass}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  application:
+    name: RECOMMENDATION-SERVICE
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mapping,env,refresh,bus-refresh,retries,health,circuitbreakers,circuitbreakerevents,retry
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        record-exceptions:
+          - by.javaguru.recommendationservice.exception.GeneralException
+        failure-rate-threshold: 50
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state:
+          seconds: 10s
+        sliding-window-type: count_based
+        sliding-window-size: 2
+        minimum-number-of-calls: 1
+        event-consumer-buffer-size: 10
+        register-health-indicator: true
+        permitted-number-of-calls-in-half-open-state: 3
+    instances:
+      position-service:
+        base-config: default
+      company-service:
+        base-config: default
+    circuit-breaker-aspect-order: 1
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 1s
+    instances:
+      position-service:
+        base-config: default
+      company-service:
+        base-config: default
+    retry-aspect-order: 2
+
+logging:
+  level:
+#    org.springframework.cloud.config: DEBUG
+#    org.springframework.web.client: DEBUG
+    by.javaguru.recommendationservice: debug
+    root: info
+    io.github.resilience4j: debug
+    org.springframework.cloud.openfeign: debug
+    feign: debug

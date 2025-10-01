@@ -1,0 +1,28 @@
+services:
+  db:
+    image: 'postgres:latest'
+    restart: always
+    container_name: company-service-db
+    environment:
+      POSTGRES_DB: company
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5438:5432"
+
+#  liquibase:
+#    image: liquibase/liquibase:latest
+#    container_name: company-service-liquibase-test
+#    depends_on:
+#      - db
+#    volumes:
+#      - /liquibase/changelog:/liquibase/changelog
+#    command: >
+#      sh -c '
+#      liquibase
+#      --url=jdbc:postgresql://db:5432/postgres
+#      --changelog-file=./changelog/db.changelog-master.yaml
+#      --username=user
+#      --password=password
+#      update --contexts=test
+#      '

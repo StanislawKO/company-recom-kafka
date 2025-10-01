@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: create-company-table.sql
+      relativeToChangelogFile: true

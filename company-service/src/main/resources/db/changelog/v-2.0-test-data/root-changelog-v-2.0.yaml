@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: insert-company-test-db.sql
+      relativeToChangelogFile: true

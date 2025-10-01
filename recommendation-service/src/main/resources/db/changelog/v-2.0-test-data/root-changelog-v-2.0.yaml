@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: insert-recommendation-test-db.sql
+      relativeToChangelogFile: true

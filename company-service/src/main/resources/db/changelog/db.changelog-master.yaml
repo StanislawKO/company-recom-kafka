@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: Stas_Kozh
+      changes:
+        - tagDatabase:
+            tag: db_init
+
+  - include:
+      file: v-1.0/root-changelog.v-1.0.yaml
+      relativeToChangelogFile: true
+  - changeSet:
+      id: 1
+      author: Stas_Kozh
+      changes:
+        - tagDatabase:
+            tag: v-1.0
+
+  - include:
+      file: v-2.0-test-data/root-changelog-v-2.0.yaml
+      relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: Stas_Kozh
+      changes:
+        - tagDatabase:
+            tag: v-2.0-test-data
